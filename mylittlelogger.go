@@ -33,7 +33,7 @@ const FATAL = 0
 var config Config = Config{
 	ForFatal:       func() { os.Exit(1) },
 	Level:          INFO,
-	Prefixes:       []string{"DEBUG", "INFO", "WARN", "ERR", "FATAL"},
+	Prefixes:       []string{"FATAL", "ERR", "WARN", "INFO", "DEBUG"},
 	DateTimeFormat: "2006/01/02 15:04:05",
 }
 
@@ -62,7 +62,7 @@ func Initialize(cfg Config) {
 const tpl = "%s | %s | %s \n"
 
 func line(lvl int, a ...interface{}) string {
-	return fmt.Sprintf(tpl, config.Prefixes[DEBUG], time.Now().Format(config.DateTimeFormat), fmt.Sprint(a...))
+	return fmt.Sprintf(tpl, config.Prefixes[lvl], time.Now().Format(config.DateTimeFormat), fmt.Sprint(a...))
 }
 
 func linef(lvl int, format string, elements ...interface{}) string {
