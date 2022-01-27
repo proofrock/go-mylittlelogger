@@ -14,7 +14,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-// Version 0.1.1
+// Version 0.2.0
 
 package mylittlelogger
 
@@ -44,7 +44,7 @@ type Config struct {
 	DateTimeFormat string
 }
 
-func Initialize(cfg Config) {
+func Configure(cfg Config) {
 	if cfg.ForFatal != nil {
 		config.ForFatal = cfg.ForFatal
 	}
