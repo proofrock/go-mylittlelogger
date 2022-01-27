@@ -44,7 +44,7 @@ type Config struct {
 	DateTimeFormat string
 }
 
-func Initialize(cfg Config) {
+func Configure(cfg Config) {
 	if cfg.ForFatal != nil {
 		config.ForFatal = cfg.ForFatal
 	}
