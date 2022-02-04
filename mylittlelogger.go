@@ -29,6 +29,7 @@ const INFO = 3
 const WARN = 2
 const ERROR = 1
 const FATAL = 0
+const NONE = -1
 
 var config Config = Config{
 	ForFatal:       func() { os.Exit(1) },
@@ -48,7 +49,7 @@ func Configure(cfg Config) {
 	if cfg.ForFatal != nil {
 		config.ForFatal = cfg.ForFatal
 	}
-	if cfg.Level >= FATAL && cfg.Level <= DEBUG {
+	if cfg.Level >= NONE && cfg.Level <= DEBUG {
 		config.Level = cfg.Level
 	}
 	if len(cfg.Prefixes) == 5 {
@@ -170,16 +171,22 @@ func Errorl(lambda func() string) {
 }
 
 func Fatal(a ...interface{}) {
-	fmt.Fprint(os.Stderr, line(FATAL, a...))
-	config.ForFatal()
+	if config.Level >= FATAL {
+		fmt.Fprint(os.Stderr, line(FATAL, a...))
+		config.ForFatal()
+	}
 }
 
 func Fatalf(format string, elements ...interface{}) {
-	fmt.Fprint(os.Stderr, linef(FATAL, format, elements...))
-	config.ForFatal()
+	if config.Level >= FATAL {
+		fmt.Fprint(os.Stderr, linef(FATAL, format, elements...))
+		config.ForFatal()
+	}
 }
 
 func Fatall(lambda func() string) {
-	fmt.Fprint(os.Stderr, line(FATAL, lambda()))
-	config.ForFatal()
+	if config.Level >= FATAL {
+		fmt.Fprint(os.Stderr, line(FATAL, lambda()))
+		config.ForFatal()
+	}
 }
