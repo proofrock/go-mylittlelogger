@@ -14,7 +14,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-// Version 0.2.0
+// Version 0.3.0
 
 package mylittlelogger
 
@@ -38,10 +38,8 @@ var Level = INFO
 var Prefixes = []string{"DEBUG", "INFO", "WARN", "ERR", "FATAL"}
 var DateTimeFormat = "2006/01/02 15:04:05"
 
-const tpl = "%s | %s | %s \n"
-
 func line(lvl int, a ...interface{}) string {
-	return fmt.Sprintf(tpl, Prefixes[DEBUG], time.Now().Format(DateTimeFormat), fmt.Sprint(a...))
+	return fmt.Sprintf("%s | %s | %s\n", Prefixes[Level], time.Now().Format(DateTimeFormat), fmt.Sprint(a...))
 }
 
 func linef(lvl int, format string, elements ...interface{}) string {
@@ -163,20 +161,20 @@ func Errorl(lambda func() string) {
 func Fatal(a ...interface{}) {
 	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, line(FATAL, a...))
-		ForFatal()
 	}
+	ForFatal()
 }
 
 func Fatalf(format string, elements ...interface{}) {
 	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, linef(FATAL, format, elements...))
-		ForFatal()
 	}
+	ForFatal()
 }
 
 func Fatall(lambda func() string) {
 	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, line(FATAL, lambda()))
-		ForFatal()
 	}
+	ForFatal()
 }
