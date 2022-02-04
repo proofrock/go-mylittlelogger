@@ -30,6 +30,8 @@ const WARN = 2
 const ERROR = 1
 const FATAL = 0
 const NONE = -1
+const NOT_EVEN_STDOUT = -2
+const NOT_EVEN_STDERR = -3
 
 var config Config = Config{
 	ForFatal:       func() { os.Exit(1) },
@@ -43,6 +45,10 @@ type Config struct {
 	Level          int
 	Prefixes       []string
 	DateTimeFormat string
+}
+
+func GetConfiguration() Config {
+	return config
 }
 
 func Configure(cfg Config) {
@@ -71,27 +77,39 @@ func linef(lvl int, format string, elements ...interface{}) string {
 }
 
 func StdOut(a ...interface{}) {
-	fmt.Fprint(os.Stdout, fmt.Sprint(a...), "\n")
+	if config.Level > NOT_EVEN_STDOUT {
+		fmt.Fprint(os.Stdout, fmt.Sprint(a...), "\n")
+	}
 }
 
 func StdOutf(format string, elements ...interface{}) {
-	fmt.Fprint(os.Stdout, fmt.Sprintf(format, elements...), "\n")
+	if config.Level > NOT_EVEN_STDOUT {
+		fmt.Fprint(os.Stdout, fmt.Sprintf(format, elements...), "\n")
+	}
 }
 
 func StdOutl(lambda func() string) {
-	fmt.Fprint(os.Stdout, lambda(), "\n")
+	if config.Level > NOT_EVEN_STDOUT {
+		fmt.Fprint(os.Stdout, lambda(), "\n")
+	}
 }
 
 func StdErr(a ...interface{}) {
-	fmt.Fprint(os.Stderr, fmt.Sprint(a...), "\n")
+	if config.Level > NOT_EVEN_STDERR {
+		fmt.Fprint(os.Stderr, fmt.Sprint(a...), "\n")
+	}
 }
 
 func StdErrf(format string, elements ...interface{}) {
-	fmt.Fprint(os.Stderr, fmt.Sprintf(format, elements...), "\n")
+	if config.Level > NOT_EVEN_STDERR {
+		fmt.Fprint(os.Stderr, fmt.Sprintf(format, elements...), "\n")
+	}
 }
 
 func StdErrl(lambda func() string) {
-	fmt.Fprint(os.Stderr, lambda(), "\n")
+	if config.Level > NOT_EVEN_STDERR {
+		fmt.Fprint(os.Stderr, lambda(), "\n")
+	}
 }
 
 func IsDebugEnabled() bool {
