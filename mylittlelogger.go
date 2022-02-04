@@ -55,7 +55,7 @@ func Configure(cfg Config) {
 	if cfg.ForFatal != nil {
 		config.ForFatal = cfg.ForFatal
 	}
-	if cfg.Level >= NONE && cfg.Level <= DEBUG {
+	if cfg.Level >= NOT_EVEN_STDERR && cfg.Level <= DEBUG {
 		config.Level = cfg.Level
 	}
 	if len(cfg.Prefixes) == 5 {
