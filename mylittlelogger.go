@@ -33,43 +33,15 @@ const NONE = -1
 const NOT_EVEN_STDOUT = -2
 const NOT_EVEN_STDERR = -3
 
-var config Config = Config{
-	ForFatal:       func() { os.Exit(1) },
-	Level:          INFO,
-	Prefixes:       []string{"DEBUG", "INFO", "WARN", "ERR", "FATAL"},
-	DateTimeFormat: "2006/01/02 15:04:05",
-}
-
-type Config struct {
-	ForFatal       func()
-	Level          int
-	Prefixes       []string
-	DateTimeFormat string
-}
-
-func GetConfiguration() Config {
-	return config
-}
-
-func Configure(cfg Config) {
-	if cfg.ForFatal != nil {
-		config.ForFatal = cfg.ForFatal
-	}
-	if cfg.Level >= NOT_EVEN_STDERR && cfg.Level <= DEBUG {
-		config.Level = cfg.Level
-	}
-	if len(cfg.Prefixes) == 5 {
-		config.Prefixes = cfg.Prefixes
-	}
-	if cfg.DateTimeFormat != "" {
-		config.DateTimeFormat = cfg.DateTimeFormat
-	}
-}
+var ForFatal = func() { os.Exit(1) }
+var Level = INFO
+var Prefixes = []string{"DEBUG", "INFO", "WARN", "ERR", "FATAL"}
+var DateTimeFormat = "2006/01/02 15:04:05"
 
 const tpl = "%s | %s | %s \n"
 
 func line(lvl int, a ...interface{}) string {
-	return fmt.Sprintf(tpl, config.Prefixes[DEBUG], time.Now().Format(config.DateTimeFormat), fmt.Sprint(a...))
+	return fmt.Sprintf(tpl, Prefixes[DEBUG], time.Now().Format(DateTimeFormat), fmt.Sprint(a...))
 }
 
 func linef(lvl int, format string, elements ...interface{}) string {
@@ -77,134 +49,134 @@ func linef(lvl int, format string, elements ...interface{}) string {
 }
 
 func StdOut(a ...interface{}) {
-	if config.Level > NOT_EVEN_STDOUT {
+	if Level > NOT_EVEN_STDOUT {
 		fmt.Fprint(os.Stdout, fmt.Sprint(a...), "\n")
 	}
 }
 
 func StdOutf(format string, elements ...interface{}) {
-	if config.Level > NOT_EVEN_STDOUT {
+	if Level > NOT_EVEN_STDOUT {
 		fmt.Fprint(os.Stdout, fmt.Sprintf(format, elements...), "\n")
 	}
 }
 
 func StdOutl(lambda func() string) {
-	if config.Level > NOT_EVEN_STDOUT {
+	if Level > NOT_EVEN_STDOUT {
 		fmt.Fprint(os.Stdout, lambda(), "\n")
 	}
 }
 
 func StdErr(a ...interface{}) {
-	if config.Level > NOT_EVEN_STDERR {
+	if Level > NOT_EVEN_STDERR {
 		fmt.Fprint(os.Stderr, fmt.Sprint(a...), "\n")
 	}
 }
 
 func StdErrf(format string, elements ...interface{}) {
-	if config.Level > NOT_EVEN_STDERR {
+	if Level > NOT_EVEN_STDERR {
 		fmt.Fprint(os.Stderr, fmt.Sprintf(format, elements...), "\n")
 	}
 }
 
 func StdErrl(lambda func() string) {
-	if config.Level > NOT_EVEN_STDERR {
+	if Level > NOT_EVEN_STDERR {
 		fmt.Fprint(os.Stderr, lambda(), "\n")
 	}
 }
 
 func IsDebugEnabled() bool {
-	return config.Level == DEBUG
+	return Level == DEBUG
 }
 
 func Debug(a ...interface{}) {
-	if config.Level == DEBUG {
+	if Level == DEBUG {
 		fmt.Fprint(os.Stdout, line(DEBUG, a...))
 	}
 }
 
 func Debugf(format string, elements ...interface{}) {
-	if config.Level == DEBUG {
+	if Level == DEBUG {
 		fmt.Fprint(os.Stdout, linef(DEBUG, format, elements...))
 	}
 }
 
 func Debugl(lambda func() string) {
-	if config.Level == DEBUG {
+	if Level == DEBUG {
 		fmt.Fprint(os.Stdout, line(DEBUG, lambda()))
 	}
 }
 
 func Info(a ...interface{}) {
-	if config.Level >= INFO {
+	if Level >= INFO {
 		fmt.Fprint(os.Stdout, line(INFO, a...))
 	}
 }
 
 func Infof(format string, elements ...interface{}) {
-	if config.Level >= INFO {
+	if Level >= INFO {
 		fmt.Fprint(os.Stdout, linef(INFO, format, elements...))
 	}
 }
 
 func Infol(lambda func() string) {
-	if config.Level >= INFO {
+	if Level >= INFO {
 		fmt.Fprint(os.Stdout, line(INFO, lambda()))
 	}
 }
 
 func Warn(a ...interface{}) {
-	if config.Level >= WARN {
+	if Level >= WARN {
 		fmt.Fprint(os.Stdout, line(WARN, a...))
 	}
 }
 
 func Warnf(format string, elements ...interface{}) {
-	if config.Level >= WARN {
+	if Level >= WARN {
 		fmt.Fprint(os.Stdout, linef(WARN, format, elements...))
 	}
 }
 
 func Warnl(lambda func() string) {
-	if config.Level >= WARN {
+	if Level >= WARN {
 		fmt.Fprint(os.Stdout, line(WARN, lambda()))
 	}
 }
 
 func Error(a ...interface{}) {
-	if config.Level >= ERROR {
+	if Level >= ERROR {
 		fmt.Fprint(os.Stdout, line(ERROR, a...))
 	}
 }
 
 func Errorf(format string, elements ...interface{}) {
-	if config.Level >= ERROR {
+	if Level >= ERROR {
 		fmt.Fprint(os.Stderr, linef(ERROR, format, elements...))
 	}
 }
 
 func Errorl(lambda func() string) {
-	if config.Level >= ERROR {
+	if Level >= ERROR {
 		fmt.Fprint(os.Stderr, line(ERROR, lambda()))
 	}
 }
 
 func Fatal(a ...interface{}) {
-	if config.Level >= FATAL {
+	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, line(FATAL, a...))
-		config.ForFatal()
+		ForFatal()
 	}
 }
 
 func Fatalf(format string, elements ...interface{}) {
-	if config.Level >= FATAL {
+	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, linef(FATAL, format, elements...))
-		config.ForFatal()
+		ForFatal()
 	}
 }
 
 func Fatall(lambda func() string) {
-	if config.Level >= FATAL {
+	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, line(FATAL, lambda()))
-		config.ForFatal()
+		ForFatal()
 	}
 }
