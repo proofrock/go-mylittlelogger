@@ -14,7 +14,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-// Version 0.3.0
+// Version 0.3.2
 
 package mylittlelogger
 
