@@ -14,7 +14,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-// Version 0.3.0
+// Version 0.3.2
 
 package mylittlelogger
 
@@ -33,13 +33,13 @@ const NONE = -1
 const NOT_EVEN_STDOUT = -2
 const NOT_EVEN_STDERR = -3
 
-var ForFatal = func() { os.Exit(1) }
+var WhenFatal = func() { os.Exit(1) }
 var Level = INFO
-var Prefixes = []string{"DEBUG", "INFO", "WARN", "ERR", "FATAL"}
+var Prefixes = []string{"FATAL", "ERR", "WARN", "INFO", "DEBUG"}
 var DateTimeFormat = "2006/01/02 15:04:05"
 
 func line(lvl int, a ...interface{}) string {
-	return fmt.Sprintf("%s | %s | %s\n", Prefixes[Level], time.Now().Format(DateTimeFormat), fmt.Sprint(a...))
+	return fmt.Sprintf("%s | %s | %s\n", Prefixes[lvl], time.Now().Format(DateTimeFormat), fmt.Sprint(a...))
 }
 
 func linef(lvl int, format string, elements ...interface{}) string {
@@ -162,19 +162,19 @@ func Fatal(a ...interface{}) {
 	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, line(FATAL, a...))
 	}
-	ForFatal()
+	WhenFatal()
 }
 
 func Fatalf(format string, elements ...interface{}) {
 	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, linef(FATAL, format, elements...))
 	}
-	ForFatal()
+	WhenFatal()
 }
 
 func Fatall(lambda func() string) {
 	if Level >= FATAL {
 		fmt.Fprint(os.Stderr, line(FATAL, lambda()))
 	}
-	ForFatal()
+	WhenFatal()
 }
