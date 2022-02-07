@@ -33,7 +33,7 @@ const NONE = -1
 const NOT_EVEN_STDOUT = -2
 const NOT_EVEN_STDERR = -3
 
-var WhenFatal = func(msg ...string) { os.Exit(1) }
+var WhenFatal = func(msg string) { os.Exit(1) }
 var Level = INFO
 var Prefixes = []string{"FATAL", "ERR", "WARN", "INFO", "DEBUG"}
 var DateTimeFormat = "2006/01/02 15:04:05"
