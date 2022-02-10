@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2022-, Germano Rizzo <oss@germanorizzo.it>
+  Copyright (c) 2022-, Germano Rizzo <oss /AT/ germanorizzo /DOT/ it>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,7 +14,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-// Version 0.3.2
+// Version 0.4.0
 
 package mylittlelogger
 
@@ -33,7 +33,7 @@ const NONE = -1
 const NOT_EVEN_STDOUT = -2
 const NOT_EVEN_STDERR = -3
 
-var WhenFatal = func() { os.Exit(1) }
+var WhenFatal = func(msg string) { os.Exit(1) }
 var Level = INFO
 var Prefixes = []string{"FATAL", "ERR", "WARN", "INFO", "DEBUG"}
 var DateTimeFormat = "2006/01/02 15:04:05"
@@ -159,22 +159,25 @@ func Errorl(lambda func() string) {
 }
 
 func Fatal(a ...interface{}) {
+	msg := line(FATAL, a...)
 	if Level >= FATAL {
-		fmt.Fprint(os.Stderr, line(FATAL, a...))
+		fmt.Fprint(os.Stderr, msg)
 	}
-	WhenFatal()
+	WhenFatal(msg)
 }
 
 func Fatalf(format string, elements ...interface{}) {
+	msg := linef(FATAL, format, elements...)
 	if Level >= FATAL {
-		fmt.Fprint(os.Stderr, linef(FATAL, format, elements...))
+		fmt.Fprint(os.Stderr, msg)
 	}
-	WhenFatal()
+	WhenFatal(msg)
 }
 
 func Fatall(lambda func() string) {
+	msg := line(FATAL, lambda())
 	if Level >= FATAL {
-		fmt.Fprint(os.Stderr, line(FATAL, lambda()))
+		fmt.Fprint(os.Stderr, msg)
 	}
-	WhenFatal()
+	WhenFatal(msg)
 }
